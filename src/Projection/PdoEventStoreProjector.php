@@ -647,13 +647,14 @@ EOT;
             /* @var Message $event */
             $this->streamPositions[$streamName] = $key;
 
-            if (! isset($this->handlers[$event->messageName()])) {
+            $messageName = $event instanceof Message ? $event->messageName() : \get_class($event);
+            if (! isset($this->handlers[$messageName])) {
                 continue;
             }
 
             $this->eventCounter++;
 
-            $handler = $this->handlers[$event->messageName()];
+            $handler = $this->handlers[$messageName];
             $result = $handler($this->state, $event);
 
             if (\is_array($result)) {
